@@ -20,6 +20,7 @@
 @property (strong, nonatomic) UIColor *headerColor;
 @property (strong, nonatomic) UIColor *tabBackgroundColor;
 @property (assign, nonatomic) CGFloat headerHeight;
+@property (strong, nonatomic) UIImage *headerBackgroundImage;
 
 @end
 
@@ -160,11 +161,12 @@
     [self setHeaderColor:[UIColor orangeColor]];
   }
   
-  if ([[self dataSource] respondsToSelector:@selector(tabBackgroundColor)]) {
-    [self setTabBackgroundColor:[[self dataSource] tabBackgroundColor]];
-  } else {
-    [self setTabBackgroundColor:[UIColor colorWithWhite:0.95f alpha:1.0f]];
-  }
+    if ([[self dataSource] respondsToSelector:@selector(tabBackgroundImage)]) {
+        [self setHeaderBackgroundImage:[[self dataSource] tabBackgroundImage]];
+    } else {
+        [self setHeaderBackgroundImage:nil];
+    }
+    
   
   NSMutableArray *tabViews = [NSMutableArray array];
   
@@ -208,13 +210,13 @@
   if ([self header]) {
     [[self header] removeFromSuperview];
   }
-  CGRect frame = self.view.frame;
-  frame.origin.y = 0;
-  frame.size.height = [self headerHeight];
-  [self setHeader:[[GUITabScrollView alloc] initWithFrame:frame tabViews:tabViews tabBarHeight:[self headerHeight] tabColor:[self headerColor] backgroundColor:[self tabBackgroundColor]]];
-  [[self header] setTabScrollDelegate:self];
-  
-  [[self view] addSubview:[self header]];
+    CGRect frame = self.view.frame;
+    frame.origin.y = 0;
+    frame.size.height = [self headerHeight];
+    [self setHeader:[[GUITabScrollView alloc] initWithFrame:frame tabViews:tabViews tabBarHeight:[self headerHeight] tabColor:[self headerColor] tabImage:[self headerBackgroundImage]]];
+    [[self header] setTabScrollDelegate:self];
+    
+    [[self view] addSubview:[self header]];
 }
 
 @end
